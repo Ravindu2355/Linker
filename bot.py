@@ -18,6 +18,7 @@ PRIVATE_CHANNEL_ID = Config.MCHAT # Replace with your private channel ID
 DOWNLOAD_FOLDER = Config.DL_FOLDER # Directory to store files
 DISK_USAGE_THRESHOLD = Config.DISK_USAGE_THRESHOLD  # 98% disk usage limit
 
+plugins = dict(root="plugins")
 # Initialize bot
 app = Client("file_hosting_bot", api_id=API_ID, api_hash=API_HASH, bot_token=BOT_TOKEN, plugins=plugins)
 
