@@ -6,15 +6,17 @@ from pyrogram import Client, filters
 from pyrogram.types import Message
 from pyrogram.errors import FloodWait
 from datetime import datetime, timedelta
+from config import Config
+
 
 # Configuration
-API_ID = os.getenv("apiid")
-API_HASH = os.getenv("apihash")
-BOT_TOKEN = os.getenv("tk")
-dom = os.getenv("murl")
-PRIVATE_CHANNEL_ID = os.getenv("mchat") # Replace with your private channel ID
-DOWNLOAD_FOLDER = os.getenv("dl","./RvxDl") # Directory to store files
-DISK_USAGE_THRESHOLD = 0.98  # 98% disk usage limit
+API_ID = Config.API_ID
+API_HASH = Config.API_HASH
+BOT_TOKEN = Config.BOT_TOKEN
+dom = Config.DOM
+PRIVATE_CHANNEL_ID = Config.MCHAT # Replace with your private channel ID
+DOWNLOAD_FOLDER = Config.DL_FOLDER # Directory to store files
+DISK_USAGE_THRESHOLD = Config.DISK_USAGE_THRESHOLD  # 98% disk usage limit
 
 # Initialize bot
 app = Client("file_hosting_bot", api_id=API_ID, api_hash=API_HASH, bot_token=BOT_TOKEN)
