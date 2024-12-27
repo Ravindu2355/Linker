@@ -9,7 +9,7 @@ class Config(object):
   
   AUTH = os.getenv("auth")
   
-  OWNER = os.getenv("owner")
+  OWNER = int(os.getenv("owner"))
 
   DOM = os.getenv("murl")
 
