@@ -7,7 +7,7 @@ from pyrogram.types import Message
 from pyrogram.errors import FloodWait
 from datetime import datetime, timedelta
 from config import Config
-from plugins.authersHandle import is_auth
+from plugins.autherHandle import is_auth
 
 # Configuration
 API_ID = Config.API_ID
