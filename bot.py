@@ -13,7 +13,7 @@ API_HASH = os.getenv("apihash")
 BOT_TOKEN = os.getenv("tk")
 dom = os.getenv("murl")
 PRIVATE_CHANNEL_ID = os.getenv("mchat") # Replace with your private channel ID
-DOWNLOAD_FOLDER = "./RvxDl"# Directory to store files
+DOWNLOAD_FOLDER = os.getenv("dl","./RvxDl") # Directory to store files
 DISK_USAGE_THRESHOLD = 0.98  # 98% disk usage limit
 
 # Initialize bot
@@ -113,9 +113,11 @@ async def handle_file(client, message: Message):
         disk_usage = get_disk_usage()
 
     # Download the file with progress tracking
-    file_path = os.path.join(DOWNLOAD_FOLDER, file.file_name if hasattr(file, "file_name") else f"{message.id}.jpg")
+    fexname= file.file_name if hasattr(file, "file_name") else f"{message.id}.rvx"
+    file_path = os.path.join(DOWNLOAD_FOLDER, fexname)
     progress_message = await message.reply_text("Starting download...")
-
+    downloadL=f"{dom}/download/{fexname}"
+    streamL=f"{dom}/stream/{fexname}"
     start_time = time.time()
     try:
         await message.download(
@@ -125,7 +127,7 @@ async def handle_file(client, message: Message):
         )
         print(f"File downloaded: {file_path}")
         await progress_message.edit_text(
-            f"File hosted successfully!\n\nDownload Link: {file_path}"
+            f"**File hosted successfully!**\n\n**Download Link:** {downloadL}\n\n**Watch/stream Link:** {streamL}\n\n💝💝💝💝💝💝💝💝"
         )
     except Exception as e:
         print(f"Error downloading file: {e}")
