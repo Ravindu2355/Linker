@@ -48,10 +48,15 @@ def free_up_space(required_space):
         if freed_space >= required_space:
             break
 
-last_m=""
+
+last_m = ""
+last_update_time = time.time()  # Track the last update time
+
 async def progress_callback(current, total, message: Message, start_time):
-    global last_m
-    """Callback to update progress messages."""
+    global last_m, last_update_time
+    """Callback to update progress messages every 10 seconds."""
+    
+    # Calculate elapsed time
     elapsed_time = time.time() - start_time
     percentage = (current / total) * 100
     speed = current / elapsed_time  # Bytes per second
@@ -72,13 +77,18 @@ async def progress_callback(current, total, message: Message, start_time):
     )
 
     # Update the message every 10 seconds
-    if elapsed_time % 10 == 0:
-        try:
-            if progress_message != last_m:
-              last_m = progress_message
-              await message.edit_text(progress_message)
-        except FloodWait as e:
-            time.sleep(e.value)
+    current_time = time.time()
+    if current_time - last_update_time >= 10:  # Update every 10 seconds
+        last_update_time = current_time  # Reset the last update time
+
+        # Only update if the message has changed
+        if progress_message != last_m:
+            last_m = progress_message
+            try:
+                await message.edit_text(progress_message)
+            except FloodWait as e:
+                # Handle FloodWait by waiting for the specified amount of time
+                await asyncio.sleep(e.value)
 
 
 @app.on_message(filters.document | filters.video | filters.audio | filters.photo)
