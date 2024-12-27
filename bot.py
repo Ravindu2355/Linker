@@ -164,6 +164,39 @@ async def list_files(client, message: Message):
     await message.reply_text(f"**Hosted Files:**\n\n{file_list}")
 
 
+@app.on_message(filters.command("cleandir", prefixes="/"))
+async def clean_directory(client, message: Message):
+    """Command to clean (delete) all files in a directory."""
+    # Check if the directory exists
+    if os.path.exists(DOWNLOAD_FOLDER):
+        # List all files in the directory
+        files_in_directory = os.listdir(DOWNLOAD_FOLDER)
+
+        if not files_in_directory:
+            await message.reply("The directory is already empty.")
+            return
+
+        # Iterate through files and delete them
+        for filename in files_in_directory:
+            file_path = os.path.join(DOWNLOAD_FOLDER, filename)
+            try:
+                if os.path.isfile(file_path):
+                    os.remove(file_path)
+                elif os.path.isdir(file_path):
+                    # Recursively delete directories
+                    os.rmdir(file_path)
+                print(f"Deleted: {file_path}")
+            except Exception as e:
+                print(f"Error deleting {file_path}: {e}")
+
+        await message.reply(f"Successfully cleaned the directory: {DOWNLOAD_FOLDER}")
+    else:
+        await message.reply(f"Directory {DOWNLOAD_FOLDER} does not exist.")
+
+
+
+
+
 if __name__ == "__main__":
     print("Bot is running...")
     app.run()
