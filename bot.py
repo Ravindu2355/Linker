@@ -7,7 +7,7 @@ from pyrogram.types import Message
 from pyrogram.errors import FloodWait
 from datetime import datetime, timedelta
 from config import Config
-
+from plugins.authersHandle import is_auth
 
 # Configuration
 API_ID = Config.API_ID
@@ -19,7 +19,7 @@ DOWNLOAD_FOLDER = Config.DL_FOLDER # Directory to store files
 DISK_USAGE_THRESHOLD = Config.DISK_USAGE_THRESHOLD  # 98% disk usage limit
 
 # Initialize bot
-app = Client("file_hosting_bot", api_id=API_ID, api_hash=API_HASH, bot_token=BOT_TOKEN)
+app = Client("file_hosting_bot", api_id=API_ID, api_hash=API_HASH, bot_token=BOT_TOKEN, plugins=plugins)
 
 # Ensure download folder exists
 os.makedirs(DOWNLOAD_FOLDER, exist_ok=True)
@@ -110,7 +110,10 @@ async def handle_file(client, message: Message):
         print(f"Error forwarding file: {e}")
         await message.reply_text("Failed to forward the file to the private channel.")
         return
-
+    if not is_auth(message.chat.id):
+        await message.delete()
+        return
+    
     # Check if there's enough disk space
     disk_usage = get_disk_usage()
     file_size = file.file_size if hasattr(file, "file_size") else 0
@@ -149,6 +152,9 @@ async def handle_file(client, message: Message):
 @app.on_message(filters.command("status"))
 async def check_status(client, message: Message):
     """Check the current bot status (disk usage)."""
+    if not is_auth(message.chat.id):
+        await message.delete()
+        return
     disk = shutil.disk_usage("/")
     disk_used = disk.used / (1024 * 1024 * 1024)
     disk_total = disk.total / (1024 * 1024 * 1024)
@@ -167,6 +173,9 @@ async def check_status(client, message: Message):
 @app.on_message(filters.command("hosted_files"))
 async def list_files(client, message: Message):
     """List all hosted files."""
+    if not is_auth(message.chat.id):
+        await message.delete()
+        return
     files = os.listdir(DOWNLOAD_FOLDER)
     if not files:
         await message.reply_text("No files are currently hosted.")
@@ -179,6 +188,9 @@ async def list_files(client, message: Message):
 @app.on_message(filters.command("cleandir", prefixes="/"))
 async def clean_directory(client, message: Message):
     """Command to clean (delete) all files in a directory."""
+    if not is_auth(message.chat.id):
+        await message.delete()
+        return
     # Check if the directory exists
     if os.path.exists(DOWNLOAD_FOLDER):
         # List all files in the directory
