@@ -10,9 +10,6 @@ from config import Config
 from plugins.autherHandle import is_auth
 
 # Configuration
-API_ID = Config.API_ID
-API_HASH = Config.API_HASH
-BOT_TOKEN = Config.BOT_TOKEN
 dom = Config.DOM
 PRIVATE_CHANNEL_ID = Config.MCHAT # Replace with your private channel ID
 DOWNLOAD_FOLDER = Config.DL_FOLDER # Directory to store files
@@ -92,7 +89,7 @@ async def progress_callback(current, total, message: Message, start_time):
                 await asyncio.sleep(e.value)
 
 
-@app.on_message(filters.document | filters.video | filters.audio | filters.photo)
+@Cilent.on_message(filters.document | filters.video | filters.audio | filters.photo)
 async def handle_file(client, message: Message):
     """Handle incoming files, forward them to a private channel, and host them."""
     file = message.document or message.video or message.audio or message.photo
@@ -148,7 +145,7 @@ async def handle_file(client, message: Message):
         await progress_message.edit_text("Error occurred while downloading the file.")
 
 
-@app.on_message(filters.command("status"))
+@Client.on_message(filters.command("status"))
 async def check_status(client, message: Message):
     """Check the current bot status (disk usage)."""
     if not is_auth(message.chat.id):
@@ -169,7 +166,7 @@ async def check_status(client, message: Message):
     )
 
 
-@app.on_message(filters.command("hosted_files"))
+@Client.on_message(filters.command("hosted_files"))
 async def list_files(client, message: Message):
     """List all hosted files."""
     if not is_auth(message.chat.id):
@@ -184,7 +181,7 @@ async def list_files(client, message: Message):
     await message.reply_text(f"**Hosted Files:**\n\n{file_list}")
 
 
-@app.on_message(filters.command("cleandir", prefixes="/"))
+@Client.on_message(filters.command("cleandir", prefixes="/"))
 async def clean_directory(client, message: Message):
     """Command to clean (delete) all files in a directory."""
     if not is_auth(message.chat.id):
