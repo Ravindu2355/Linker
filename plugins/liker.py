@@ -89,7 +89,7 @@ async def progress_callback(current, total, message: Message, start_time):
                 await asyncio.sleep(e.value)
 
 
-@Cilent.on_message(filters.document | filters.video | filters.audio | filters.photo)
+@Client.on_message(filters.document | filters.video | filters.audio | filters.photo)
 async def handle_file(client, message: Message):
     """Handle incoming files, forward them to a private channel, and host them."""
     file = message.document or message.video or message.audio or message.photo
