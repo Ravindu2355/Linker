@@ -48,4 +48,4 @@ EXPOSE 8000
 # EXPOSE 8443  # (If needed for Pyrogram)
 
 # Run both Node.js server and Python bot in parallel
-CMD npm start & gunicorn --bind 0.0.0.0:8000 app:app & python3 bot.py
+CMD npm start & python3 bot.py
