@@ -43,7 +43,8 @@ COPY package*.json ./
 RUN npm install
 
 # Expose ports
-EXPOSE 8000  # Node.js server port (adjust if needed)
+EXPOSE 8000  
+#Node.js server port (adjust if needed)
 # EXPOSE 8443  # (If needed for Pyrogram)
 
 # Run both Node.js server and Python bot in parallel
